@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Análisis Digital</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Vinculación del CSS -->
+</head>
+<body>
+    <!-- Video de Fondo -->
+    <video id="video-background" autoplay loop muted>
+        <source src="Recursos/Pagina Web.mp4" type="video/mp4">
+        Tu navegador no soporta la etiqueta de video.
+    </video>
+
+    <div class="container">
+        <div class="content">
+            <!-- Página de Inicio -->
+            <div id="start-page">
+                <h1>Reflejo Digital</h1>
+                <p>Descubre cómo se ve tu identidad en el mundo digital. Responde algunas preguntas sobre ti mismo y observa cómo tus respuestas crean una experiencia única que muestra quién eres en esta era digital.</p>
+                <button onclick="startForm()">Iniciar Formulario</button>
+            </div>
+
+            <!-- Formulario -->
+            <div id="form" style="display: none;">
+                <!-- Eliminar el título -->
+                <!-- <h2>Formulario sobre Relación con el Mundo Digital</h2> -->
+                <!-- Preguntas Abiertas -->
+                <div class="question" id="question1">
+                    <label for="answer1">Describe tu relación con la tecnología usando solo tres palabras.</label>
+                    <textarea id="answer1"></textarea>
+                </div>
+                <div class="question" id="question2">
+                    <label for="answer2">¿Qué es lo que más te inspira o preocupa sobre cómo el mundo se está digitalizando?</label>
+                    <textarea id="answer2"></textarea>
+                </div>
+                <div class="question" id="question3">
+                    <label for="answer3">Escribe una frase o pensamiento que exprese cómo te sientes en el mundo digital.</label>
+                    <textarea id="answer3"></textarea>
+                </div>
+
+                <!-- Selección Múltiple -->
+                <div class="question" id="question4">
+                    <label for="answer4">¿Qué emoción describe mejor tu experiencia en internet?</label>
+        <div id="answer4">
+            <label><input type="radio" name="answer4" value="Alegría"> Alegría</label>
+            <label><input type="radio" name="answer4" value="Ansiedad"> Ansiedad</label>
+            <label><input type="radio" name="answer4" value="Curiosidad"> Curiosidad</label>
+            <label><input type="radio" name="answer4" value="Desconexión"> Desconexión</label>
+        </div>
+                </div>
+                <div class="question" id="question5">
+                    <label for="answer5">¿Con qué frecuencia piensas en la privacidad de tus datos personales?</label>
+                    <div id="answer5">
+                        <label><input type="radio" name="answer5" value="Muy frecuentemente"> Muy frecuentemente</label>
+                        <label><input type="radio" name="answer5" value="A veces"> A veces</label>
+                        <label><input type="radio" name="answer5" value="Raramente"> Raramente</label>
+                        <label><input type="radio" name="answer5" value="Nunca"> Nunca</label>
+                    </div>
+                </div>
+                <div class="question" id="question6">
+                    <label for="answer6">¿Cómo sueles relacionarte en las redes sociales?</label>
+                    <div id="answer6">
+                        <label><input type="radio" name="answer6" value="Compartiendo aspectos personales"> Compartiendo aspectos personales</label>
+                        <label><input type="radio" name="answer6" value="Observando y reflexionando"> Observando y reflexionando</label>
+                        <label><input type="radio" name="answer6" value="Solo para mantener contacto"> Solo para mantener contacto</label>
+                        <label><input type="radio" name="answer6" value="Limitando mi actividad"> Limitando mi actividad</label>
+                    </div>
+                </div>
+            
+                <!-- Selección de Imágenes -->
+                <div class="question" id="question7">
+                    <label for="answer7">Elige la imagen que mejor representa cómo te sientes hoy:</label>
+                    <div id="answer7" class="image-grid">
+                        <label><input type="radio" name="answer7" value="Perro (Felicidad)"><img src="Recursos/Perro (Felicidad).webp" alt="Perro (Felicidad)"></label>
+                        <label><input type="radio" name="answer7" value="Gato (Independencia)"><img src="Recursos/Gato (Independencia).webp" alt="Gato (Independencia)"></label>
+                        <label><input type="radio" name="answer7" value="Montaña (Calma)"><img src="Recursos/Montaña (Calma).webp" alt="Montaña (Calma)"></label>
+                        <label><input type="radio" name="answer7" value="Olas del mar (Libertad)"><img src="Recursos/Olas de mar (Libertad).webp" alt="Olas del mar (Libertad)"></label>
+                    </div>
+                </div>
+                <div class="question" id="question8">
+                    <label for="answer8">Elige la imagen que mejor describe cómo percibes el mundo digital:</label>
+                    <div id="answer8" class="image-grid">
+                        <label><input type="radio" name="answer8" value="Redes de cables (Conexión)"><img src="Recursos/Redes de Cables (Conexion).webp" alt="Redes de cables (Conexión)"></label>
+                        <label><input type="radio" name="answer8" value="Cielo nublado (Incertidumbre)"><img src="Recursos/Cielo nublado (incertidumbre).webp" alt="Cielo nublado (Incertidumbre)"></label>
+                        <label><input type="radio" name="answer8" value="Prismas de colores (Creatividad)"><img src="Recursos/Prismas de colores (Creatividad).webp" alt="Prismas de colores (Creatividad)"></label>
+                        <label><input type="radio" name="answer8" value="Laberinto (Confusión)"><img src="Recursos/Laberinto (Confusion).webp" alt="Laberinto (Confusión)"></label>
+                    </div>
+                </div>
+            
+                <!-- Reflexión Final -->
+                <div class="question" id="question9">
+                    <label for="answer9">¿Qué esperas que la tecnología traiga al futuro de las personas?</label>
+                    <textarea id="answer9"></textarea>
+                </div>
+                <div class="question" id="question10">
+                    <label for="answer10">¿Qué palabra describe mejor lo que quieres reflejar en tus interacciones en línea?</label>
+                    <div id="answer10">
+                        <label><input type="radio" name="answer10" value="Autenticidad"> Autenticidad</label>
+                        <label><input type="radio" name="answer10" value="Cuidado"> Cuidado</label>
+                        <label><input type="radio" name="answer10" value="Innovación"> Innovación</label>
+                        <label><input type="radio" name="answer10" value="Privacidad"> Privacidad</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones de Navegación -->
+            <div id="navigation-buttons" style="display: none;">
+                <button id="prevBtn" onclick="changeQuestion(-1)">Atrás</button>
+                <button id="nextBtn" onclick="changeQuestion(1)">Siguiente</button>
+                <button id="finishBtn" onclick="finishForm()" style="display: none;">Finalizar</button>
+            </div>
+
+            <!-- Pantalla Final -->
+            <div id="end-page" style="display: none;">
+                <h2>¡Gracias por completar el formulario!</h2>
+                <p>Tu participación es muy valiosa para nosotros.</p>
+                <button id="sendToAIButton" onclick="sendPromptToAI()">Crear Análisis</button>
+                <div id="loading-message" style="display: none;">Analizando...</div>
+                <div id="ai-response-container" style="display: none;">
+                    <h3>Respuesta de la IA</h3>
+                    <p id="ai-response"></p>
+                </div>
+                <div id="fallback-container" class="separate-box">
+                    <p>Si la IA no funciona correctamente, puedes copiar el mensaje y pegarlo en una IA externa como ChatGPT.</p>
+                    <button id="copy-button" onclick="copyPrompt()">Copiar mensaje</button>
+                    <a href="https://chatgpt.com/" target="_blank">Ir a ChatGPT</a>
+                </div>
+                <button onclick="restartForm()">Volver al inicio</button>
+            </div>
+           
+            
+                                    
+        </div>
+    </div>
+
+    <script src="script.js"></script> <!-- Vinculación del JavaScript -->
+    <script type="importmap">
+        {
+          "imports": {
+            "@google/generative-ai": "https://esm.run/@google/generative-ai"
+          }
+        }
+    </script>
+    <script type="module">
+        import { GoogleGenerativeAI } from "@google/generative-ai";
+
+        // Reemplaza 'YOUR_API_KEY' con tu clave de API real
+        const API_KEY = 'AIzaSyCNBRrTmWYOb-KyGi_4qN24Vc9_Frdhv8M';
+        const genAI = new GoogleGenerativeAI(API_KEY);
+
+        window.genAI = genAI; // Hacer que genAI esté disponible globalmente
+
+        async function sendPromptToAI() {
+            const prompt = generatePrompt();
+            if (!prompt) return; // Detener si no se generó el prompt
+
+            const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
+
+            try {
+                const result = await model.generateContent(prompt);
+                const response = await result.response;
+                document.getElementById('ai-response').innerText = await response.text();
+                document.getElementById('ai-response-container').style.display = 'block';
+            } catch (error) {
+                console.error('Error al generar contenido:', error);
+                document.getElementById('fallback-container').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
