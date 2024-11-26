@@ -24,6 +24,7 @@
 
             <!-- Formulario -->
             <div id="form" style="display: none;">
+                
                 <!-- Eliminar el título -->
                 <!-- <h2>Formulario sobre Relación con el Mundo Digital</h2> -->
                 <!-- Preguntas Abiertas -->
@@ -128,14 +129,10 @@
                     <a href="https://chatgpt.com/" target="_blank">Ir a ChatGPT</a>
                 </div>
                 <button onclick="restartForm()">Volver al inicio</button>
-            </div>
-           
-            
-                                    
+            </div>                                    
         </div>
     </div>
 
-    <script src="script.js"></script> <!-- Vinculación del JavaScript -->
     <script type="importmap">
         {
           "imports": {
@@ -169,5 +166,16 @@
             }
         }
     </script>
+
+    <audio id="introAudio" src="Recursos/audio.MP3" preload="auto" loop></audio>
+    <div class="volume-controls music-controls">
+        <label for="musicVolume">Volumen de la música:</label>
+        <input type="range" id="musicVolume" min="0" max="1" step="0.1" value="1">
+        <button id="muteMusic">Silenciar Música</button>
+    </div>
+
+    <script src="script.js"></script> <!-- Vinculación del JavaScript -->
+
+
 </body>
 </html>
