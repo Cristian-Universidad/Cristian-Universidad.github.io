@@ -34,6 +34,7 @@ body, html {
     max-width: 600px;
     width: 100%;
     text-align: center;
+    animation: breathing 3s ease-in-out infinite;
 }
 
 button {
@@ -146,4 +147,41 @@ textarea {
 
 .image-grid input[type="radio"]:checked + img {
     border: 3px solid #4CAF50; /* Cambia el color del borde cuando la imagen está seleccionada */
+}
+
+.volume-controls {
+    position: fixed;
+    bottom: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+}
+
+.music-controls {
+    left: 20px;
+}
+
+.voice-controls {
+    right: 20px;
+}
+
+.volume-controls label {
+    margin-right: 10px;
+}
+
+.volume-controls input[type="range"] {
+    vertical-align: middle;
+}
+
+@keyframes breathing {
+    0% {
+        box-shadow: 0 0 10px rgb(255, 255, 255);
+    }
+    50% {
+        box-shadow: 0 0 40px rgb(255, 255, 255);
+    }
+    100% {
+        box-shadow: 0 0 10px rgb(255, 255, 255);
+    }
 }
