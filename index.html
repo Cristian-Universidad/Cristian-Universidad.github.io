@@ -19,7 +19,7 @@
             <div id="start-page">
                 <h1>Reflejo Digital</h1>
                 <p>Descubre cómo se ve tu identidad en el mundo digital. Responde algunas preguntas sobre ti mismo y observa cómo tus respuestas crean una experiencia única que muestra quién eres en esta era digital.</p>
-                <button onclick="startForm()">Iniciar Formulario</button>
+                <button id="startButton" onclick="startExperience()">Iniciar Formulario</button>
             </div>
 
             <!-- Formulario -->
@@ -150,28 +150,60 @@
         window.genAI = genAI; // Hacer que genAI esté disponible globalmente
 
         async function sendPromptToAI() {
-            const prompt = generatePrompt();
-            if (!prompt) return; // Detener si no se generó el prompt
+    const prompt = generatePrompt();
+    if (!prompt) return; // Detener si no se generó el prompt
 
-            const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
+    document.getElementById('loading-message').style.display = 'block'; // Mostrar mensaje de carga
 
-            try {
-                const result = await model.generateContent(prompt);
-                const response = await result.response;
-                document.getElementById('ai-response').innerText = await response.text();
-                document.getElementById('ai-response-container').style.display = 'block';
-            } catch (error) {
-                console.error('Error al generar contenido:', error);
-                document.getElementById('fallback-container').style.display = 'block';
-            }
+    const model = window.genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
+    try {
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const analysisText = await response.text();
+
+        document.getElementById('ai-response').innerText = analysisText;
+        document.getElementById('ai-response-container').style.display = 'block';
+
+        // Verificar si la voz está activada antes de llamar a speak
+        var voiceCheckbox = document.getElementById('voiceCheckbox');
+        if (voiceCheckbox.checked) {
+            // Llamar a la función speak para leer el análisis
+            speak(analysisText);
+
+            // Añadir la frase final después de un pequeño retraso para asegurar que el análisis se lea completamente
+            setTimeout(function() {
+                speak("Espero que esta experiencia te haya inspirado a reflexionar sobre tu identidad digital.");
+            }, analysisText.length * 50); // Ajustar el tiempo según la longitud del texto
         }
+    } catch (error) {
+        console.error('Error al generar contenido:', error);
+        if (error.message.includes('The model is overloaded')) {
+            alert('El modelo está sobrecargado. Por favor, intenta nuevamente más tarde.');
+        } else {
+            alert('Ocurrió un error al generar el contenido. Por favor, intenta nuevamente.');
+        }
+        document.getElementById('fallback-container').style.display = 'block';
+    } finally {
+        document.getElementById('loading-message').style.display = 'none'; // Ocultar mensaje de carga
+    }
+}
     </script>
 
+    <div id="immersive-options" class="immersive-options">
+        <p>Activa para una experiencia más inmersiva:</p>
+        <label>
+            <input type="checkbox" id="musicCheckbox" onclick="toggleMusic()"> Activar Música
+        </label>
+        <label>
+            <input type="checkbox" id="voiceCheckbox" onclick="toggleVoice()"> Activar Voz
+        </label>
+    </div>
+    
     <audio id="introAudio" src="Recursos/audio.MP3" preload="auto" loop></audio>
     <div class="volume-controls music-controls">
         <label for="musicVolume">Volumen de la música:</label>
         <input type="range" id="musicVolume" min="0" max="1" step="0.1" value="1">
-        <button id="muteMusic">Silenciar Música</button>
+        <button id="muteMusic">Musica: Activada</button>
     </div>
 
     <script src="script.js"></script> <!-- Vinculación del JavaScript -->

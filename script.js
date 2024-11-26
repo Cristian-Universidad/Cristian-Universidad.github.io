@@ -37,7 +37,7 @@ function showQuestion(index) {
 function changeQuestion(direction) {
     let answer = '';
     const currentElement = document.getElementById(`answer${currentQuestion + 1}`);
-
+    
     if (currentElement) {
         if (currentElement.tagName.toLowerCase() === 'textarea' || currentElement.tagName.toLowerCase() === 'input') {
             answer = currentElement.value.trim();
@@ -62,8 +62,9 @@ function changeQuestion(direction) {
         finishForm(); // Ir a la página final si se ha llegado al final
         return;
     }
-    
+
     showQuestion(currentQuestion);
+    playSound(); // Reproducir sonido después de cambiar la pregunta
 }
 
 
@@ -159,12 +160,28 @@ async function sendPromptToAI() {
     document.getElementById('loading-message').style.display = 'block'; // Mostrar mensaje de carga
 
     const model = window.genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
-
     try {
         const result = await model.generateContent(prompt);
         const response = await result.response;
-        document.getElementById('ai-response').innerText = await response.text();
+        let analysisText = await response.text();
+
+        // Eliminar el encabezado del análisis
+        analysisText = analysisText.replace("Análisis según las respuestas proporcionadas:", "").trim();
+
+        document.getElementById('ai-response').innerText = analysisText;
         document.getElementById('ai-response-container').style.display = 'block';
+
+        // Verificar si la voz está activada antes de llamar a speak
+        var voiceCheckbox = document.getElementById('voiceCheckbox');
+        if (voiceCheckbox.checked) {
+            // Llamar a la función speak para leer el análisis
+            speak(analysisText);
+
+            // Añadir la frase final después de un pequeño retraso para asegurar que el análisis se lea completamente
+            setTimeout(function() {
+                speak("Espero que esta experiencia te haya inspirado a reflexionar sobre tu identidad digital.");
+            }, analysisText.length * 50); // Ajustar el tiempo según la longitud del texto
+        }
     } catch (error) {
         console.error('Error al generar contenido:', error);
         if (error.message.includes('The model is overloaded')) {
@@ -175,10 +192,8 @@ async function sendPromptToAI() {
         document.getElementById('fallback-container').style.display = 'block';
     } finally {
         document.getElementById('loading-message').style.display = 'none'; // Ocultar mensaje de carga
-        document.getElementById('fallback-container').style.display = 'block'; // Asegurar que el fallback se muestre
     }
 }
-
 
 // Función para finalizar el formulario y mostrar la página final
 function finishForm() {
@@ -195,7 +210,6 @@ function restartForm() {
         textarea.value = '';
         textarea.style.height = 'auto'; // Reiniciar altura
     });
-
     const radios = document.querySelectorAll('input[type="radio"]');
     radios.forEach(radio => {
         radio.checked = false;
@@ -207,12 +221,16 @@ function restartForm() {
     document.getElementById('ai-response-container').style.display = 'none';
     document.getElementById('fallback-container').style.display = 'none'; // Ocultar el contenedor de fallback
 
+    // Mostrar el apartado de opciones inmersivas
+    document.getElementById('immersive-options').style.display = 'block';
+
+    // Reiniciar el estado de los checkboxes
+    document.getElementById('musicCheckbox').checked = false;
+    document.getElementById('voiceCheckbox').checked = false;
+
     // Reiniciar el índice de preguntas
     currentQuestion = 0;
     showQuestion(currentQuestion);
-
-    // Mostrar el contenedor de fallback al reiniciar
-    document.getElementById('fallback-container').style.display = 'block';
 }
 
 
@@ -227,11 +245,6 @@ function speak(text) {
 
 var introText = "Hola, mi nombre es PsicoNet. Hoy te acompañaré en un viaje inmersivo de autodescubrimiento digital. Responde estas preguntas y juntos exploraremos cómo te percibes en el mundo tecnológico.";
 
-window.onload = function() {
-    speak(introText);
-    var audio = document.getElementById('introAudio');
-    audio.play();
-};
 
 document.getElementById('musicVolume').addEventListener('input', function() {
     var audio = document.getElementById('introAudio');
@@ -241,7 +254,7 @@ document.getElementById('musicVolume').addEventListener('input', function() {
 document.getElementById('muteMusic').addEventListener('click', function() {
     var audio = document.getElementById('introAudio');
     audio.muted = !audio.muted;
-    this.textContent = audio.muted ? 'Activar Música' : 'Silenciar Música';
+    this.textContent = audio.muted ? 'Musica: Desactivada' : 'Musica: Activada';
 });
 
 async function sendPromptToAI() {
@@ -254,18 +267,25 @@ async function sendPromptToAI() {
     try {
         const result = await model.generateContent(prompt);
         const response = await result.response;
-        const analysisText = await response.text();
+        let analysisText = await response.text();
+
+        // Eliminar el encabezado del análisis
+        analysisText = analysisText.replace("Análisis según las respuestas proporcionadas:", "").trim();
 
         document.getElementById('ai-response').innerText = analysisText;
         document.getElementById('ai-response-container').style.display = 'block';
 
-        // Llamar a la función speak para leer el análisis
-        speak(analysisText);
+        // Verificar si la voz está activada antes de llamar a speak
+        var voiceCheckbox = document.getElementById('voiceCheckbox');
+        if (voiceCheckbox.checked) {
+            // Llamar a la función speak para leer el análisis
+            speak(analysisText);
 
-        // Añadir la frase final después de un pequeño retraso para asegurar que el análisis se lea completamente
-        setTimeout(function() {
-            speak("Espero que esta experiencia te haya inspirado a reflexionar sobre tu identidad digital.");
-        }, analysisText.length * 50); // Ajustar el tiempo según la longitud del texto
+            // Añadir la frase final después de un pequeño retraso para asegurar que el análisis se lea completamente
+            setTimeout(function() {
+                speak("Espero que esta experiencia te haya inspirado a reflexionar sobre tu identidad digital.");
+            }, analysisText.length * 50); // Ajustar el tiempo según la longitud del texto
+        }
     } catch (error) {
         console.error('Error al generar contenido:', error);
         if (error.message.includes('The model is overloaded')) {
@@ -288,6 +308,9 @@ function finishForm() {
     document.getElementById('form').style.display = 'none';
     document.getElementById('end-page').style.display = 'block';
     document.getElementById('navigation-buttons').style.display = 'none';
+
+    // Mostrar el cuadro de fallback
+    document.getElementById('fallback-container').style.display = 'block';
 }
 
 function restartForm() {
@@ -308,17 +331,96 @@ function restartForm() {
     document.getElementById('ai-response-container').style.display = 'none';
     document.getElementById('fallback-container').style.display = 'none'; // Ocultar el contenedor de fallback
 
+    // Mostrar el apartado de opciones inmersivas
+    document.getElementById('immersive-options').style.display = 'block';
+
+    // Reiniciar el estado de los checkboxes
+    document.getElementById('musicCheckbox').checked = false;
+    document.getElementById('voiceCheckbox').checked = false;
+
     // Reiniciar el índice de preguntas
     currentQuestion = 0;
     showQuestion(currentQuestion);
-
-    // Reproducir la frase de introducción nuevamente
-    speak(introText);
 }
 
 function mostrarResultado(usuario, analisis) {
     var resultadoText = "Hola " + usuario + ", gracias por participar. Tu relación con la tecnología refleja " + analisis + ". Espero que esta experiencia te haya inspirado a reflexionar sobre tu identidad digital.";
     speak(resultadoText);
+}
+
+function startMusic() {
+    var audio = document.getElementById('introAudio');
+    audio.play();
+}
+
+function startVoice() {
+    var introText = "Hola, mi nombre es PsicoNet. Hoy te acompañaré en un viaje inmersivo de autodescubrimiento digital. Responde estas preguntas y juntos exploraremos cómo te percibes en el mundo tecnológico.";
+    speak(introText);
+}
+
+function toggleMusic() {
+    var audio = document.getElementById('introAudio');
+    var musicCheckbox = document.getElementById('musicCheckbox');
+    if (musicCheckbox.checked) {
+        audio.play();
+    } else {
+        audio.pause();
+        audio.currentTime = 0; // Reiniciar el audio
+    }
+}
+
+function toggleVoice() {
+    var voiceCheckbox = document.getElementById('voiceCheckbox');
+    if (voiceCheckbox.checked) {
+        var introText = "Hola, mi nombre es PsicoNet. Hoy te acompañaré en un viaje inmersivo de autodescubrimiento digital. Responde estas preguntas y juntos exploraremos cómo te percibes en el mundo tecnológico.";
+        speak(introText);
+    }
+}
+function startExperience() {
+    // Ocultar el apartado de opciones inmersivas
+    document.getElementById('immersive-options').style.display = 'none';
+
+    // Mostrar el formulario y ocultar la página de inicio
+    document.getElementById('start-page').style.display = 'none';
+    document.getElementById('form').style.display = 'block';
+    document.getElementById('navigation-buttons').style.display = 'block';
+
+    // Llamar a la función startForm para inicializar el formulario
+    startForm();
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    function playSound() {
+        var audio = new Audio('Recursos/CLick_Boton.wav');
+        audio.play();
+    }
+
+    document.querySelectorAll('button').forEach(button => {
+        button.addEventListener('click', playSound);
+    });
+});
+
+function validateQuestion() {
+    let answer = '';
+    const currentElement = document.getElementById(`answer${currentQuestion + 1}`);
+    
+    if (currentElement) {
+        if (currentElement.tagName.toLowerCase() === 'textarea' || currentElement.tagName.toLowerCase() === 'input') {
+            answer = currentElement.value.trim();
+        } else if (currentElement.tagName.toLowerCase() === 'div') {
+            const selectedOption = document.querySelector(`input[name="answer${currentQuestion + 1}"]:checked`);
+            answer = selectedOption ? selectedOption.value : '';
+        }
+    }
+
+    // Validar respuesta antes de avanzar
+    if (answer === '') {
+        alert(`Por favor, completa la respuesta ${currentQuestion + 1}. No puedes dejar este espacio en blanco.`);
+        return false; // Detener si no hay respuesta
+    }
+
+    return true; // Permitir avanzar si hay respuesta
 }
 
 // Funciones existentes para manejar el formulario

@@ -45,12 +45,12 @@ button {
     margin: 10px 0;
     border-radius: 5px;
     cursor: pointer;
-    box-shadow: 0 0px 15px rgba(69, 160, 73, 0.5); /* Sombra uniforme alrededor del botón */
+    box-shadow: 0 0px 15px rgba(69, 160, 73, 0.5);
 }
 
 button:hover {
     background-color: #45a049;
-    box-shadow: 0 0px 15px rgba(69, 160, 73, 0.7); /* Sombra más intensa al pasar el ratón */
+    box-shadow: 0 0px 15px rgba(69, 160, 73, 0.7);
 }
 
 textarea {
@@ -60,8 +60,8 @@ textarea {
     border: 1px solid #ccc;
     margin-top: 10px;
     box-sizing: border-box;
-    overflow: hidden; /* Ocultar barra de desplazamiento */
-    resize: none; /* Desactivar el redimensionamiento manual */
+    overflow: hidden;
+    resize: none;
 }
 
 #final-prompt-container {
@@ -69,17 +69,17 @@ textarea {
 }
 
 .separate-box {
-    background-color: rgba(50, 50, 50, 0.8); /* Diferente color de fondo */
+    background-color: rgba(50, 50, 50, 0.8);
     color: white;
     padding: 20px;
     border-radius: 15px;
     margin-top: 20px;
     text-align: center;
-    border: 2px solid #4CAF50; /* Borde para diferenciar */
+    border: 2px solid #4CAF50;
 }
 
 .separate-box a {
-    color: #FFD700; /* Color del enlace para diferenciar del fondo oscuro */
+    color: #FFD700;
     text-decoration: none;
 }
 
@@ -88,33 +88,32 @@ textarea {
 }
 
 .separate-box button {
-    margin-right: 10px; /* Separar el botón de la URL */
+    margin-right: 10px;
 }
-
 
 .question div {
     margin-top: 30px;
-    margin-bottom: 20px; /* Añadir margen inferior para más espacio entre preguntas */
-    text-align: left; /* Alinear el contenido a la izquierda */
+    margin-bottom: 20px;
+    text-align: left;
 }
 
 .question img {
-    width: 50px; /* Ajusta el tamaño de las imágenes según sea necesario */
+    width: 50px;
     height: 50px;
     margin-right: 10px;
     vertical-align: middle;
 }
 
 .question label {
-    font-size: 1.5em; /* Aumentar el tamaño de las preguntas */
+    font-size: 1.5em;
     display: block;
-    margin-bottom: 10px; /* Margen inferior para separar de las respuestas */
-    font-weight: bold; /* Hacer las preguntas más destacadas */
+    margin-bottom: 10px;
+    font-weight: bold;
 }
 
 .question div label {
-    font-size: 1em; /* Tamaño de las respuestas */
-    margin-left: 20px; /* Separar las respuestas de las preguntas */
+    font-size: 1em;
+    margin-left: 20px;
 }
 
 .question input[type="radio"] {
@@ -136,7 +135,7 @@ textarea {
 .image-grid img {
     width: 100%;
     height: auto;
-    max-width: 200px; /* Ajusta el tamaño máximo de las imágenes según sea necesario */
+    max-width: 200px;
     border-radius: 10px;
     cursor: pointer;
 }
@@ -146,7 +145,7 @@ textarea {
 }
 
 .image-grid input[type="radio"]:checked + img {
-    border: 3px solid #4CAF50; /* Cambia el color del borde cuando la imagen está seleccionada */
+    border: 3px solid #4CAF50;
 }
 
 .volume-controls {
@@ -184,4 +183,88 @@ textarea {
     100% {
         box-shadow: 0 0 10px rgb(255, 255, 255);
     }
+}
+
+@media (max-width: 600px) {
+    .volume-controls {
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%; /* Reducir el ancho */
+        text-align: center;
+        z-index: 1000;
+        background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente */
+        padding: 5px; /* Reducir el padding */
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .volume-controls label {
+        margin-right: 5px; /* Reducir el margen */
+        font-size: 0.8em; /* Reducir el tamaño de la fuente */
+    }
+
+    .volume-controls input[type="range"] {
+        width: 70%; /* Ajustar el ancho del control deslizante */
+        margin: 0 5px; /* Reducir el margen */
+    }
+
+    .volume-controls button {
+        font-size: 0.8em; /* Reducir el tamaño de la fuente */
+        padding: 5px 10px; /* Reducir el padding */
+    }
+
+    .immersive-options {
+        position: fixed;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        text-align: center;
+        z-index: 1000;
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 10px;
+        border-radius: 10px;
+        height: auto; /* Ajustar la altura al contenido */
+    }
+
+    .volume-controls {
+        position: fixed;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        text-align: center;
+        z-index: 1000;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding: 10px;
+        border-radius: 10px;
+        height: auto; /* Ajustar la altura al contenido */
+    }
+}
+
+.immersive-options {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 0.9em;
+    z-index: 1000;
+    max-width: 300px;
+    height: 15%; /* Ajustar la altura al contenido */
+}
+
+.immersive-options p {
+    margin: 0 0 10px 0;
+}
+
+.immersive-options label {
+    display: block;
+    margin-bottom: 5px;
 }
