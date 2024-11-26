@@ -239,9 +239,21 @@ function restartForm() {
 function speak(text) {
     var msg = new SpeechSynthesisUtterance(text);
     var voices = window.speechSynthesis.getVoices();
-    msg.voice = voices.find(voice => voice.name === 'Google español de América Latina' || voice.name === 'Google US Spanish Female') || voices[0]; // Cambiar a una voz femenina
+    // Filtrar para encontrar una voz femenina en español
+    var selectedVoice = voices.find(voice => voice.lang === 'es-ES' && voice.name.includes('Female'));
+    // Si no se encuentra una voz femenina específica, usar la primera voz en español disponible
+    if (!selectedVoice) {
+        selectedVoice = voices.find(voice => voice.lang === 'es-ES');
+    }
+    msg.voice = selectedVoice;
     window.speechSynthesis.speak(msg);
 }
+
+// Asegurarse de que las voces estén cargadas antes de llamar a speak
+window.speechSynthesis.onvoiceschanged = function() {
+    var voices = window.speechSynthesis.getVoices();
+    console.log(voices); // Puedes usar esto para ver todas las voces disponibles
+};
 
 var introText = "Hola, mi nombre es PsicoNet. Hoy te acompañaré en un viaje inmersivo de autodescubrimiento digital. Responde estas preguntas y juntos exploraremos cómo te percibes en el mundo tecnológico.";
 
