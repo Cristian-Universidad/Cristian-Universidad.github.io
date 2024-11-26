@@ -71,7 +71,17 @@ function changeQuestion(direction) {
 
 // Prompt base con espacios para las respuestas
 const basePrompt = `
-    Eres un psicólogo virtual, y una persona ha respondido a un cuestionario sobre su relación con el mundo digital. A partir de sus respuestas, genera un análisis breve en un solo párrafo que resuma sus patrones, preocupaciones y aspiraciones, sin citar literalmente las respuestas de la persona ni utilizarlas textualmente entre comillas. Si mencionas algún aspecto, hazlo de manera interpretativa. Además, enfoca el análisis de manera positiva, resaltando los puntos fuertes o enfoques constructivos en las respuestas. Termina con una frase motivacional inspirada en los temas y aspiraciones expresados. Aquí están las respuestas:
+    Eres un psicólogo virtual, y una persona ha respondido a un cuestionario sobre su relación con el mundo digital. A partir de sus respuestas, genera un análisis breve en un solo párrafo que resuma sus patrones, preocupaciones y aspiraciones, sin citar literalmente las respuestas de la persona ni utilizarlas textualmente entre comillas. Si mencionas algún aspecto, hazlo de manera interpretativa. Además, enfoca el análisis de manera positiva, resaltando los puntos fuertes o enfoques constructivos en las respuestas.
+
+Instrucciones:
+
+El inicio del análisis debe ser cercano con la persona, utilizando la siguiente estructura:
+"Gracias por permitirme acompañarte en este viaje. Tu relación con la tecnología refleja [Análisis]."
+Realiza un análisis breve de las respuestas en un párrafo, destacando los principales temas y emociones.
+Termina con una frase motivacional inspirada en los temas y aspiraciones expresados.
+No cites literalmente las respuestas ni las uses textualmente entre comillas.
+Incluye los apartados "Análisis según las respuestas proporcionadas" y "Frase Motivadora".
+Respuestas:
     1. Describe tu relación con la tecnología usando solo tres palabras: {respuesta1}.
     2. ¿Qué es lo que más te inspira o preocupa sobre cómo el mundo se está digitalizando? {respuesta2}.
     3. Escribe una frase o pensamiento que exprese cómo te sientes en el mundo digital: {respuesta3}.
@@ -82,7 +92,13 @@ const basePrompt = `
     8. Elige la imagen que mejor describe cómo percibes el mundo digital: {respuesta8}.
     9. ¿Qué esperas que la tecnología traiga al futuro de las personas? {respuesta9}.
     10. ¿Qué palabra describe mejor lo que quieres reflejar en tus interacciones en línea? {respuesta10}.
-    Instrucciones: Realiza un análisis breve de las respuestas en un párrafo, destacando los principales temas y emociones. Termina con una frase motivacional que ayude a esta persona a reflexionar y mantener una perspectiva positiva sobre su relación con la tecnología y el mundo digital, sin incluir saludos, introducciones ni despedidas, únicamente el análisis directo y, debajo, la frase motivacional. Si es necesario, puede incluir el título para "Análisis según las respuestas proporcionadas" y un título para "Frase Motivadora".
+    Formato de Respuesta:
+
+Análisis según las respuestas proporcionadas:
+Gracias por permitirme acompañarte en este viaje. Tu relación con la tecnología refleja [Análisis Interpretativo basado en las respuestas].
+
+Frase Motivadora:
+[Frase inspiracional acorde a los temas y aspiraciones].
 `;
 
 // Función para generar el prompt final con respuestas
@@ -199,3 +215,110 @@ function restartForm() {
     document.getElementById('fallback-container').style.display = 'block';
 }
 
+
+
+
+function speak(text) {
+    var msg = new SpeechSynthesisUtterance(text);
+    var voices = window.speechSynthesis.getVoices();
+    msg.voice = voices.find(voice => voice.name === 'Google español de América Latina' || voice.name === 'Google US Spanish Female') || voices[0]; // Cambiar a una voz femenina
+    window.speechSynthesis.speak(msg);
+}
+
+var introText = "Hola, mi nombre es PsicoNet. Hoy te acompañaré en un viaje inmersivo de autodescubrimiento digital. Responde estas preguntas y juntos exploraremos cómo te percibes en el mundo tecnológico.";
+
+window.onload = function() {
+    speak(introText);
+    var audio = document.getElementById('introAudio');
+    audio.play();
+};
+
+document.getElementById('musicVolume').addEventListener('input', function() {
+    var audio = document.getElementById('introAudio');
+    audio.volume = this.value;
+});
+
+document.getElementById('muteMusic').addEventListener('click', function() {
+    var audio = document.getElementById('introAudio');
+    audio.muted = !audio.muted;
+    this.textContent = audio.muted ? 'Activar Música' : 'Silenciar Música';
+});
+
+async function sendPromptToAI() {
+    const prompt = generatePrompt();
+    if (!prompt) return; // Detener si no se generó el prompt
+
+    document.getElementById('loading-message').style.display = 'block'; // Mostrar mensaje de carga
+
+    const model = window.genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
+    try {
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const analysisText = await response.text();
+
+        document.getElementById('ai-response').innerText = analysisText;
+        document.getElementById('ai-response-container').style.display = 'block';
+
+        // Llamar a la función speak para leer el análisis
+        speak(analysisText);
+
+        // Añadir la frase final después de un pequeño retraso para asegurar que el análisis se lea completamente
+        setTimeout(function() {
+            speak("Espero que esta experiencia te haya inspirado a reflexionar sobre tu identidad digital.");
+        }, analysisText.length * 50); // Ajustar el tiempo según la longitud del texto
+    } catch (error) {
+        console.error('Error al generar contenido:', error);
+        if (error.message.includes('The model is overloaded')) {
+            alert('El modelo está sobrecargado. Por favor, intenta nuevamente más tarde.');
+        } else {
+            alert('Ocurrió un error al generar el contenido. Por favor, intenta nuevamente.');
+        }
+        document.getElementById('fallback-container').style.display = 'block';
+    } finally {
+        document.getElementById('loading-message').style.display = 'none'; // Ocultar mensaje de carga
+    }
+}
+
+function finalizarCuestionario(analisis) {
+    var finalText = "Gracias por permitirme acompañarte en este viaje. Tu relación con la tecnología refleja " + analisis + ". Espero que esta experiencia te haya inspirado a reflexionar sobre tu identidad digital.";
+    speak(finalText);
+}
+
+function finishForm() {
+    document.getElementById('form').style.display = 'none';
+    document.getElementById('end-page').style.display = 'block';
+    document.getElementById('navigation-buttons').style.display = 'none';
+}
+
+function restartForm() {
+    // Reiniciar las respuestas
+    const textareas = document.querySelectorAll('textarea');
+    textareas.forEach(textarea => {
+        textarea.value = '';
+        textarea.style.height = 'auto'; // Reiniciar altura
+    });
+    const radios = document.querySelectorAll('input[type="radio"]');
+    radios.forEach(radio => {
+        radio.checked = false;
+    });
+
+    // Ocultar la página final y mostrar la página de inicio
+    document.getElementById('end-page').style.display = 'none';
+    document.getElementById('start-page').style.display = 'block';
+    document.getElementById('ai-response-container').style.display = 'none';
+    document.getElementById('fallback-container').style.display = 'none'; // Ocultar el contenedor de fallback
+
+    // Reiniciar el índice de preguntas
+    currentQuestion = 0;
+    showQuestion(currentQuestion);
+
+    // Reproducir la frase de introducción nuevamente
+    speak(introText);
+}
+
+function mostrarResultado(usuario, analisis) {
+    var resultadoText = "Hola " + usuario + ", gracias por participar. Tu relación con la tecnología refleja " + analisis + ". Espero que esta experiencia te haya inspirado a reflexionar sobre tu identidad digital.";
+    speak(resultadoText);
+}
+
+// Funciones existentes para manejar el formulario
